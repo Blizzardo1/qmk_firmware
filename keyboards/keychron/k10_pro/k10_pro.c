@@ -223,7 +223,7 @@ static void ckbt51_param_init(void) {
                             .reconnect_timeout      = 5,
                             .report_rate            = 90,
                             .vendor_id_source       = 1,
-                            .verndor_id             = 0, // Must be 0x3434
+                            .vendor_id             = 0, // Must be 0x3434
                             .product_id             = PRODUCT_ID};
     ckbt51_set_param(&param);
 }
@@ -251,7 +251,7 @@ void ckbt51_default_ack_handler(uint8_t *data, uint8_t len) {
                                 .reconnect_timeout      = 5,
                                 .report_rate            = 90,
                                 .vendor_id_source       = 1,
-                                .verndor_id             = 0, // Must be 0x3434
+                                .vendor_id             = 0, // Must be 0x3434
                                 .product_id             = PRODUCT_ID};
         ckbt51_set_param(&param);
     }
@@ -290,7 +290,7 @@ void battery_calculte_voltage(uint16_t value) {
         for (uint8_t i = 0; i < DRIVER_COUNT; i++)
             for (uint8_t j = 0; j < 192; j++)
                 totalBuf += g_pwm_buffer[i][j];
-        /* We assumpt it is linear relationship*/
+        /* We assume it is linear relationship*/
         uint32_t compensation = 60 * totalBuf / RGB_MATRIX_LED_COUNT / 255 / 3;
         voltage += compensation;
     }
@@ -316,13 +316,3 @@ bool via_command_kb(uint8_t *data, uint8_t length) {
 
     return true;
 }
-
-#if !defined(VIA_ENABLE)
-void raw_hid_receive(uint8_t *data, uint8_t length) {
-    switch (data[0]) {
-        case RAW_HID_CMD:
-            via_command_kb(data, length);
-            break;
-    }
-}
-#endif

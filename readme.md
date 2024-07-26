@@ -34,3 +34,7 @@ QMK is developed and maintained by Jack Humbert of OLKB with contributions from 
 ## Official Website
 
 [qmk.fm](https://qmk.fm) is the official website of QMK, where you can find links to this page, the documentation, and the keyboards supported by QMK.
+
+## Using the Kenobi Build Method
+
+If you are using Visual Studio Code, You need to run the "Configure Keyboard Firmware" task or use `qmk config user.keyboard=<path_to_your_keyboard> user.keymap=<keymap>` before running the build task from within the IDE. From there, you can run the "Build Keyboard Firmware" or "Build & Flash Keyboard Firmware" Tasks.

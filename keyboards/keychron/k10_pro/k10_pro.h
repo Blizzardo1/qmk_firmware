@@ -55,3 +55,6 @@ enum {
 #endif
 	NEW_SAFE_RANGE
 };
+
+
+bool via_command_kb(uint8_t *data, uint8_t length);

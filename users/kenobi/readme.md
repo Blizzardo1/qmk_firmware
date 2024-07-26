@@ -1,4 +1,6 @@
-Copyright <year> <name> <email> @<github_username>
+# Readme (Kenobi Mod)
+
+Copyright 2024 Adonis Deliannis <blizzardo1@blizzeta.net> @Blizzardo1
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -119,9 +119,9 @@ typedef struct {
     uint8_t  rsvd1;
     uint8_t  rsvd2;
     uint8_t  vendor_id_source; /* 0: From Bluetooth SIG, 1: From USB-IF */
-    uint16_t verndor_id;       /* No effect, the vendor ID is 0x3434 */
+    uint16_t vendor_id;       /* No effect, the vendor ID is 0x3434 */
     uint16_t product_id;
-    /* Below parametes is only available for BLE module  */
+    /* Below parameters are only available for BLE module  */
     uint16_t le_connection_interval_min;
     uint16_t le_connection_interval_max;
     uint16_t le_connection_interval_timeout;
