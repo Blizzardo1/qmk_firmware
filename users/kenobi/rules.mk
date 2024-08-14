@@ -1,6 +1,6 @@
 SRC += \
-	kenobi.c \
-	kenobi_color_map.c
+	kenobi.c
+
 # RGB_MATRIX_CUSTOM_KB = yes
 RGB_MATRIX_CUSTOM_USER = yes
 SECURE_ENABLE = yes

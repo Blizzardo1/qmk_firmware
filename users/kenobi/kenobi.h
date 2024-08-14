@@ -6,8 +6,6 @@
 #include "raw_hid.h"
 #include "battery.h"
 
-#include "kenobi_color_map.h"
-
 // #include "quantum/audio/song_list.h"
 
 // Secure Lock
@@ -26,12 +24,12 @@
 #define ENABLE_RGB_MATRIX_MULTISPLASH
 
 #undef RGB_LIGHT_EFFECT_RAINBOW_SWIRL
-#undef RGB_LIGHT_EFFECT_STATIC_GRADIENT 
+#undef RGB_LIGHT_EFFECT_STATIC_GRADIENT
 
 
 enum KENOBI_COMMANDS {
     KENOBI_GET_BATTERY_CMD = 0xC0,
-    KENOBI_GET_LAYOUT_CMD = 0xC1, 
+    KENOBI_GET_LAYOUT_CMD = 0xC1,
 };
 
 #endif
