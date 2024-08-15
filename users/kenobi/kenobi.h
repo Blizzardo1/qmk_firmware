@@ -1,6 +1,7 @@
 #ifndef USERSPACE
 #define USERSPACE
 
+
 #include "quantum.h"
 #include "k10_pro.h"
 #include "raw_hid.h"
@@ -31,6 +32,15 @@ enum KENOBI_COMMANDS {
     KENOBI_GET_BATTERY_CMD = 0xC0,
     KENOBI_GET_LAYOUT_CMD = 0xC1,
 };
+
+// Move these someplace else
+uint8_t max(uint8_t a, uint8_t b) {
+    return a > b ? a : b;
+}
+
+uint8_t min(uint8_t a, uint8_t b) {
+    return a < b ? a : b;
+}
 
 #endif
 
