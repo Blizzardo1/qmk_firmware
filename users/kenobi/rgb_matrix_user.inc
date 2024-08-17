@@ -34,6 +34,9 @@ const int kenobi_keymap[][ENTRY_SIZE] = {
 
 static void kenobi_effect_init(effect_params_t* params) {
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    for (uint8_t i = led_min; i < led_max; i++) {
+        rgb_matrix_set_color(i, 1, 36, 86);
+    }
 }
 
 

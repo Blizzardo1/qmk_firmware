@@ -30,7 +30,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
                 if (index >= led_min && index < led_max && index != NO_LED &&
                 keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-                    uint8_t color[3] = {max(index * 190, 255), max(index * 64, 255), max(index * 80, 255)};
+                    uint8_t color[3] = {mid(index * 4), mid(index * 6), mid(index * 2)};
                     rgb_matrix_set_color(index, color[0], color[1], color[2]);
                 }
             }

@@ -42,5 +42,13 @@ uint8_t min(uint8_t a, uint8_t b) {
     return a < b ? a : b;
 }
 
+/*
+    \brief Get the middle value of a number between 0 and 255
+    \param a The number to get the middle value of
+*/
+uint8_t mid(uint8_t a) {
+    return a < 0 ? 0 : a > 255 ? 255 : a;
+}
+
 #endif
 
