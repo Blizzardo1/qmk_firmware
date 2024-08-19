@@ -22,3 +22,14 @@ exports.get_device = function() {
         }
     }
 }
+
+exports.get_device_async = async function() {
+    for(var hid of await HID.devicesAsync()) {
+        if(hid.path.match(/VID_3434/) && hid.usage == 0x61) {
+            if(debug) {
+                console.log("Device:", hid);
+            }
+            return HID.HIDAsync.open(hid.path);
+        }
+    }
+}

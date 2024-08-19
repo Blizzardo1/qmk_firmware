@@ -8,9 +8,9 @@ var alive = false;
 function read_data(data) {
     alive = true;
     // Data is a buffer
-    var percent = data.readInt8(0);
-    var voltage = data.readInt8(1);
-    voltage = (voltage << 8) | data.readInt8(2);
+    var percent = data.readInt8(1);
+    var voltage = data.readInt8(2);
+    voltage = (voltage << 8) | data.readInt8(3);
 
     console.log("Percent:", percent, "Voltage:", voltage);
     device.close();

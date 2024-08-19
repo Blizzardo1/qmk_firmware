@@ -4,6 +4,7 @@
 // Declare custom effects using the RGB_MATRIX_EFFECT macro
 // (note the lack of semicolon after the macro!)
 RGB_MATRIX_EFFECT(KENOBI_EFFECT)
+RGB_MATRIX_EFFECT(KENOBI_LOCKED)
 // Step 2.
 // Define effects inside the `RGB_MATRIX_CUSTOM_EFFECT_IMPLS` ifdef block
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
@@ -43,8 +44,7 @@ static void kenobi_effect_init(effect_params_t* params) {
 static bool kenobi_effect_run(effect_params_t* params) {
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
 
-
-        for (int i = 0; i < sizeof(kenobi_keymap) / (ENTRY_SIZE * sizeof(int)); i++) {
+    for (int i = 0; i < sizeof(kenobi_keymap) / (ENTRY_SIZE * sizeof(int)); i++) {
         int d = kenobi_keymap[i][0];
         int om = kenobi_keymap[i][1];
         for(int o = 0; o < om; o++) {
@@ -64,4 +64,11 @@ static bool KENOBI_EFFECT(effect_params_t* params) {
   return kenobi_effect_run(params);
 }
 
+static bool KENOBI_LOCKED(effect_params_t* params) {
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    for (uint8_t i = led_min; i < led_max; i++) {
+        rgb_matrix_set_color(i, 255, 0, 0);
+    }
+    return true;
+}
 #endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS

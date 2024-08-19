@@ -9,9 +9,15 @@ void keyboard_post_init_user(void) {
     rgb_matrix_mode(RGB_MATRIX_CUSTOM_KENOBI_EFFECT);
 }
 
-// Unused (undeclared)?
-void rgb_startup(void) {
-    // rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
+void matrix_init_user(void) {
+    for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
+        for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
+            uint8_t index = g_led_config.matrix_co[row][col];
+
+            uint8_t color[3] = {mid(index * 4), mid(index * 6), mid(index * 2)};
+            rgb_matrix_set_color(index, color[0], color[1], color[2]);
+        }
+    }
 }
 
 // ?????
@@ -29,7 +35,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                 uint8_t index = g_led_config.matrix_co[row][col];
 
                 if (index >= led_min && index < led_max && index != NO_LED &&
-                keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+                    keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
                     uint8_t color[3] = {mid(index * 4), mid(index * 6), mid(index * 2)};
                     rgb_matrix_set_color(index, color[0], color[1], color[2]);
                 }
@@ -39,6 +45,32 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     return false;
 }
 
+bool secure_hook_user(secure_status_t secure_status) {
+    switch (secure_status) {
+        case SECURE_LOCKED:
+            // rgb_matrix_set_color_all(HSV_RED);
+            rgb_matrix_mode(RGB_MATRIX_PIXEL_RAIN);
+            break;
+        case SECURE_UNLOCKED:
+            // rgb_matrix_set_color_all(HSV_GREEN);
+            // rgb_matrix_mode(RGB_MATRIX_CUSTOM_KENOBI_EFFECT);
+            rgb_matrix_mode(RGB_MATRIX_TYPING_HEATMAP);
+            break;
+        case SECURE_PENDING:
+            rgb_matrix_set_color_all(HSV_YELLOW);
+            break;
+    }
+    snled27351_flush();
+
+    uint8_t response[32];
+    memset(response, 0, 32);
+    response[0] = KENOBI_GET_LOCK_STATUS_CMD;
+    response[1] = secure_status;
+    raw_hid_send(response, 32);
+
+    return true;
+}
+
 void raw_hid_receive(uint8_t *data, uint8_t length) {
     uint8_t response[32];
     keypos_t key;
@@ -46,15 +78,21 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
         case KENOBI_GET_BATTERY_CMD:
             battery_measure();
             uint16_t voltage = battery_get_voltage();
-            response[0]      = battery_get_percentage();
-            response[1]      = (voltage >> 8) & 0xFF;
-            response[2]      = (voltage) & 0xFF;
+            response[1]      = battery_get_percentage();
+            response[2]      = (voltage >> 8) & 0xFF;
+            response[3]      = (voltage) & 0xFF;
             raw_hid_send(response, length);
             break;
         case KENOBI_GET_LAYOUT_CMD:
             key.row = data[1];
             key.col = data[2];
-            response[0] = layer_switch_get_layer(key);
+            response[0] = KENOBI_GET_LAYOUT_CMD;
+            response[1] = layer_switch_get_layer(key);
+            raw_hid_send(response, length);
+            break;
+        case KENOBI_GET_LOCK_STATUS_CMD:
+            response[0] = KENOBI_GET_LOCK_STATUS_CMD;
+            response[1] = secure_get_status();
             raw_hid_send(response, length);
             break;
     }
