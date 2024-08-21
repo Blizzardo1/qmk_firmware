@@ -1,4 +1,5 @@
 /* Copyright 2022~2024 @ Keychron (https://www.lemokey.com)
+/* Copyright 2022~2024 @ Keychron (https://www.lemokey.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +26,7 @@ enum {
     KC_LOCK_SCREEN,        // Lock screen
     KC_MCTRL,
     KC_LNPAD,
+    KC_LNPAD,
     KC_LOPTN,
     KC_ROPTN,
     KC_LCMMD,
@@ -36,6 +38,7 @@ enum {
     P2P4G,
     BAT_LVL,
     __LK_WIRELESS_ENABLE_END = BAT_LVL,
+    __LK_WIRELESS_ENABLE_END = BAT_LVL,
 #else
     BT_HST1 = _______,
     BT_HST2 = _______,
@@ -43,8 +46,9 @@ enum {
     P2P4G   = _______,
     BAT_LVL = _______,
     __LK_WIRELESS_ENABLE_END = KC_LOCK_SCREEN,
+    __LK_WIRELESS_ENABLE_END = KC_LOCK_SCREEN,
 #endif
-    NEW_SAFE_RANGE = __LK_WIRELESS_ENABLE_END + 1,
+	NEW_SAFE_RANGE = __LK_WIRELESS_ENABLE_END + 1,
 };
 
 #define KC_TASK KC_TASK_VIEW
