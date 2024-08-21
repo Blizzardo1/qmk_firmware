@@ -7,6 +7,8 @@
 #include "raw_hid.h"
 #include "battery.h"
 #include "secure.h"
+#include "os_detection.h"
+
 // #include "quantum/audio/song_list.h"
 
 // Secure Lock
@@ -27,6 +29,7 @@
 #undef RGB_LIGHT_EFFECT_RAINBOW_SWIRL
 #undef RGB_LIGHT_EFFECT_STATIC_GRADIENT
 
+os_variant_t dos;
 
 enum KENOBI_COMMANDS {
     KENOBI_GET_BATTERY_CMD = 0xC0,
