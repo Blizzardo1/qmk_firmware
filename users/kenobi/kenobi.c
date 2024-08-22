@@ -15,36 +15,38 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
     return true;
 }
 
-void process_record_win32(keyrecord_t *record) {
+void process_record_win32(uint16_t keycode, keyrecord_t *record) {
     // Not ready
-    if (record->event.pressed && (record->event.keycode == LGUI(KC_L))) {
+    if (record->event.pressed && (keycode == LGUI(KC_L))) {
         // Windows+L was pressed
         // Add your code here
     }
 }
 
-void process_record_gnu(keyrecord_t *record) {
+void process_record_gnu(uint16_t keycode, keyrecord_t *record) {
 
 }
 
-void process_record_macos(keyrecord_t *record) {
+void process_record_macos(uint16_t keycode, keyrecord_t *record) {
 
 }
 
-void process_record_ios(keyrecord_t *record) {
+void process_record_ios(uint16_t keycode, keyrecord_t *record) {
 
 }
 
-void process_record(keyrecord_t *record) {
+void process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch(dos) {
         case OS_WINDOWS:
-        process_record_win32(record);
+        process_record_win32(keycode, record);
         case OS_LINUX:
-        process_record_gnu(record);
+        process_record_gnu(keycode, record);
         case OS_MACOS:
-        process_record_macos(record);
+        process_record_macos(keycode, record);
         case OS_IOS:
-        process_record_ios(record);
+        process_record_ios(keycode, record);
+        break;
+        case OS_UNSURE:
         break;
     }
 }
