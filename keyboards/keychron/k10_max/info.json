@@ -23,6 +23,7 @@
     "dip_switch" :{
         "pins": ["B12"]
     },
+
     "dynamic_keymap": {
         "layer_count": 4
     },
