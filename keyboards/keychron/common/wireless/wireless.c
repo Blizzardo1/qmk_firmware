@@ -278,12 +278,15 @@ static void wireless_enter_connected(uint8_t host_idx) {
     }
     if (wireless_transport.update_bat_level) wireless_transport.update_bat_level(battery_get_percentage());
     lpm_timer_reset();
+    lpm_timer_reset();
 }
 
 /* Enters disconnected state. Upon entering this state we perform the following actions:
  *   - change state to DISCONNECTED
  *   - set disconnected indication
  */
+static void wireless_enter_disconnected(uint8_t host_idx, uint8_t reason) {
+    kc_printf("wireless_disconnected %d, %d\n\r", host_idx, reason);
 static void wireless_enter_disconnected(uint8_t host_idx, uint8_t reason) {
     kc_printf("wireless_disconnected %d, %d\n\r", host_idx, reason);
 
@@ -298,18 +301,18 @@ static void wireless_enter_disconnected(uint8_t host_idx, uint8_t reason) {
         lpm_timer_reset();
         indicator_set(WT_SUSPEND, host_idx);
     } else {
+    } else {
         indicator_set(wireless_state, host_idx);
-#if defined(RGB_MATRIX_ENABLE) || defined(LED_MATRIX_ENABLE)
-        if (reason && (get_transport() & TRANSPORT_WIRELESS)) {
+        if (reason && (get_transport() & TRANSPORT_WIRELESS))
             indicator_set_backlit_timeout(DISCONNECTED_BACKLIGHT_DISABLE_TIMEOUT*1000);
-        }
-#endif
     }
 
 #ifndef DISABLE_REPORT_BUFFER
     report_buffer_init();
 #endif
     retry = 0;
+    wireless_enter_disconnected_kb(host_idx, reason);
+
     wireless_enter_disconnected_kb(host_idx, reason);
 
     indicator_battery_low_enable(false);
@@ -343,8 +346,11 @@ static void wireless_enter_sleep(void) {
     led_state = 0;
 
     if (wireless_state == WT_CONNECTED || wireless_state == WT_PARING) {
+
+    if (wireless_state == WT_CONNECTED || wireless_state == WT_PARING) {
         wireless_state = WT_SUSPEND;
         kc_printf("WT_SUSPEND\n\r");
+        lpm_timer_reset();
         lpm_timer_reset();
 
         wireless_enter_sleep_kb();
@@ -357,6 +363,7 @@ __attribute__((weak)) void wireless_enter_reset_kb(uint8_t reason) {}
 __attribute__((weak)) void wireless_enter_discoverable_kb(uint8_t host_idx) {}
 __attribute__((weak)) void wireless_enter_reconnecting_kb(uint8_t host_idx) {}
 __attribute__((weak)) void wireless_enter_connected_kb(uint8_t host_idx) {}
+__attribute__((weak)) void wireless_enter_disconnected_kb(uint8_t host_idx, uint8_t reason) {}
 __attribute__((weak)) void wireless_enter_disconnected_kb(uint8_t host_idx, uint8_t reason) {}
 __attribute__((weak)) void wireless_enter_bluetooth_pin_code_entry_kb(void) {}
 __attribute__((weak)) void wireless_exit_bluetooth_pin_code_entry_kb(void) {}
@@ -481,6 +488,7 @@ void wireless_low_battery_shutdown(void) {
     indicator_battery_low_enable(false);
 
 
+
     report_buffer_init();
     clear_keyboard(); //
     wait_ms(50);      // wait a while for bt module to free buffer by sending report
@@ -523,6 +531,7 @@ void wireless_event_task(void) {
                 wireless_enter_reconnecting(event.params.hostIndex);
                 break;
             case EVT_DISCONNECTED:
+                wireless_enter_disconnected(event.params.hostIndex, event.data);
                 wireless_enter_disconnected(event.params.hostIndex, event.data);
                 break;
             case EVT_BT_PINCODE_ENTRY:

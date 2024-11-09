@@ -53,7 +53,12 @@
 #ifndef LOW_BAT_LED_BLINK_PERIOD
 #    define LOW_BAT_LED_BLINK_PERIOD 1000
 #endif
+#ifndef LOW_BAT_LED_BLINK_PERIOD
+#    define LOW_BAT_LED_BLINK_PERIOD 1000
+#endif
 
+#ifndef LOW_BAT_LED_BLINK_TIMES
+#    define LOW_BAT_LED_BLINK_TIMES 5
 #ifndef LOW_BAT_LED_BLINK_TIMES
 #    define LOW_BAT_LED_BLINK_TIMES 5
 #endif
@@ -61,17 +66,18 @@
 #ifndef LOW_BAT_LED_TRIG_INTERVAL
 #    define LOW_BAT_LED_TRIG_INTERVAL 30000
 #endif
+#ifndef LOW_BAT_LED_TRIG_INTERVAL
+#    define LOW_BAT_LED_TRIG_INTERVAL 30000
+#endif
 
+#if ((defined(LED_MATRIX_ENABLE) || defined(RGB_MATRIX_ENABLE)) && defined(LOW_BAT_IND_INDEX))
+#    define SPACE_KEY_LOW_BAT_IND
 #if ((defined(LED_MATRIX_ENABLE) || defined(RGB_MATRIX_ENABLE)) && defined(LOW_BAT_IND_INDEX))
 #    define SPACE_KEY_LOW_BAT_IND
 #endif
 
 #if BT_HOST_MAX_COUNT > 6
 #    pragma error("HOST_COUNT max value is 6")
-#endif
-
-#ifndef P24G_HOST_DEVICES_COUNT
-#    define P24G_HOST_DEVICES_COUNT 1
 #endif
 
 typedef enum {
@@ -101,7 +107,7 @@ typedef struct {
 void indicator_init(void);
 void indicator_set(wt_state_t state, uint8_t host_index);
 void indicator_set_backlit_timeout(uint32_t time);
-void indicator_reset_backlit_time(void);
+void indicator_backlight_timer_reset(bool enable);
 bool indicator_hook_key(uint16_t keycode);
 void indicator_enable(void);
 void indicator_disable(void);
