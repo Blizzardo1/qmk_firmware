@@ -33,7 +33,6 @@
     },
     "indicators": {
         "caps_lock": "C9",
-        "num_lock": "B2",
         "on_state": 1
     },
     "matrix_pins": {

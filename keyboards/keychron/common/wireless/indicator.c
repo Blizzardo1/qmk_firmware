@@ -159,6 +159,7 @@ void indicator_init(void) {
     memset(&indicator_config, 0, sizeof(indicator_config));
 
 #if defined(BT_HOST_LED_PIN_LIST)
+#if defined(BT_HOST_LED_PIN_LIST)
     for (uint8_t i = 0; i < BT_HOST_DEVICES_COUNT; i++) {
         setPinOutput(bt_led_pin_list[i]);
         writePin(bt_led_pin_list[i], !HOST_LED_PIN_ON_STATE);
@@ -182,10 +183,20 @@ void indicator_init(void) {
     writePin(COMMON_P24G_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
 #endif
 
-#ifdef BAT_LOW_LED_PIN
-#ifdef POWER_ON_LED_DURATION
-    if (timer_read32() > POWER_ON_LED_DURATION)
+#ifdef COMMON_BT_LED_PIN
+    setPinOutput(COMMON_BT_LED_PIN);
+    writePin(COMMON_BT_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
 #endif
+
+#ifdef COMMON_P24G_LED_PIN
+    setPinOutput(COMMON_P24G_LED_PIN);
+    writePin(COMMON_P24G_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
+#endif
+
+#ifdef BAT_LOW_LED_PIN
+#    ifdef POWER_ON_LED_DURATION
+    if (timer_read32() > POWER_ON_LED_DURATION)
+#    endif
     {
         setPinOutput(BAT_LOW_LED_PIN);
         writePin(BAT_LOW_LED_PIN, !BAT_LOW_LED_PIN_ON_STATE);
@@ -300,6 +311,7 @@ static void indicator_timer_cb(void *arg) {
     }
 
 #if defined(BT_HOST_LED_PIN_LIST) || defined(P24G_HOST_LED_PIN_LIST) || defined(COMMON_BT_LED_PIN) || defined(COMMON_P24G_LED_PIN)
+#if defined(BT_HOST_LED_PIN_LIST) || defined(P24G_HOST_LED_PIN_LIST) || defined(COMMON_BT_LED_PIN) || defined(COMMON_P24G_LED_PIN)
     if (indicator_config.value) {
         uint8_t idx = (indicator_config.value & HOST_INDEX_MASK) - 1;
 #    if defined(BT_HOST_LED_PIN_LIST) || defined(P24G_HOST_LED_PIN_LIST)
@@ -308,9 +320,24 @@ static void indicator_timer_cb(void *arg) {
 #    if defined(COMMON_BT_LED_PIN) || defined(COMMON_P24G_LED_PIN)
         pin_t led_pin = NO_PIN;
 #    endif
+#    if defined(BT_HOST_LED_PIN_LIST) || defined(P24G_HOST_LED_PIN_LIST)
+        pin_t *led_lin_list = NULL;
+#    endif
+#    if defined(COMMON_BT_LED_PIN) || defined(COMMON_P24G_LED_PIN)
+        pin_t led_pin = NO_PIN;
+#    endif
         uint8_t led_count;
 #    if defined(P24G_HOST_LED_PIN_LIST) || defined(COMMON_P24G_LED_PIN)
+#    if defined(P24G_HOST_LED_PIN_LIST) || defined(COMMON_P24G_LED_PIN)
         if (indicator_config.value & HOST_P2P4G) {
+            if (idx < P24G_HOST_DEVICES_COUNT) {
+#        if defined(P24G_HOST_LED_PIN_LIST)
+                led_lin_list = p24g_led_pin_list;
+#        endif
+#        if defined(COMMON_P24G_LED_PIN)
+                led_pin = COMMON_P24G_LED_PIN;
+#        endif
+            }
             if (idx < P24G_HOST_DEVICES_COUNT) {
 #        if defined(P24G_HOST_LED_PIN_LIST)
                 led_lin_list = p24g_led_pin_list;
@@ -331,11 +358,23 @@ static void indicator_timer_cb(void *arg) {
                 led_pin = COMMON_BT_LED_PIN;
 #    endif
             }
+            if (idx < BT_HOST_DEVICES_COUNT) {
+#    if defined(BT_HOST_LED_PIN_LIST)
+                led_lin_list = bt_led_pin_list;
+#    endif
+#    if defined(COMMON_BT_LED_PIN)
+                led_pin = COMMON_BT_LED_PIN;
+#    endif
+            }
             led_count = BT_HOST_DEVICES_COUNT;
         }
 
 #if defined(BT_HOST_LED_PIN_LIST) || defined(P24G_HOST_LED_PIN_LIST)
+#if defined(BT_HOST_LED_PIN_LIST) || defined(P24G_HOST_LED_PIN_LIST)
         for (uint8_t i = 0; i < led_count; i++) {
+            if (i != idx) {
+                if (led_lin_list) writePin(led_lin_list[idx], !HOST_LED_PIN_ON_STATE);
+            }
             if (i != idx) {
                 if (led_lin_list) writePin(led_lin_list[idx], !HOST_LED_PIN_ON_STATE);
             }
@@ -379,7 +418,7 @@ static void indicator_timer_cb(void *arg) {
 void indicator_set(wt_state_t state, uint8_t host_index) {
     if (get_transport() == TRANSPORT_USB) return;
 
-    static uint8_t pre_state = 0;
+    static uint8_t pre_state          = 0;
     static uint8_t current_state      = 0;
     static uint8_t current_host       = 0;
     bool           host_index_changed = false;
@@ -395,8 +434,9 @@ void indicator_set(wt_state_t state, uint8_t host_index) {
         // Some BT chips need to reset to enter sleep mode, ignore it.
         if (current_state == WT_SUSPEND && state == WT_DISCONNECTED) return;
 
-        pre_state = current_state;
+        pre_state     = current_state;
         current_state = state;
+        (void)pre_state;
         (void)pre_state;
     } else {
         return;
@@ -424,6 +464,12 @@ void indicator_set(wt_state_t state, uint8_t host_index) {
 #ifdef COMMON_P24G_LED_PIN
             writePin(COMMON_P24G_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
 #endif
+#ifdef COMMON_BT_LED_PIN
+            writePin(COMMON_BT_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
+#endif
+#ifdef COMMON_P24G_LED_PIN
+            writePin(COMMON_P24G_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
+#endif
             INDICATOR_SET(disconnected);
             indicator_config.value = (indicator_config.type == INDICATOR_NONE) ? 0 : host_index;
             indicator_timer_cb((void *)&indicator_config.type);
@@ -435,8 +481,8 @@ void indicator_set(wt_state_t state, uint8_t host_index) {
                 if (pre_state == WT_CONNECTED)
                     indicator_set_backlit_timeout(1000);
                 else
-                /* Set timer so that user has chance to turn on the backlight when is off */
-                indicator_set_backlit_timeout(DECIDE_TIME(DISCONNECTED_BACKLIGHT_DISABLE_TIMEOUT * 1000, indicator_config.duration));
+                    /* Set timer so that user has chance to turn on the backlight when is off */
+                    indicator_set_backlit_timeout(DECIDE_TIME(DISCONNECTED_BACKLIGHT_DISABLE_TIMEOUT * 1000, indicator_config.duration));
             }
 #endif
             break;
@@ -487,6 +533,7 @@ void indicator_set(wt_state_t state, uint8_t host_index) {
 
 #if defined(BT_HOST_LED_PIN_LIST)
             for (uint8_t i = 0; i < BT_HOST_DEVICES_COUNT; i++) writePin(bt_led_pin_list[i], !HOST_LED_PIN_ON_STATE);
+            for (uint8_t i = 0; i < BT_HOST_DEVICES_COUNT; i++) writePin(bt_led_pin_list[i], !HOST_LED_PIN_ON_STATE);
 #endif
 #if defined(P24G_HOST_LED_PIN_LIST)
             for (uint8_t i = 0; i < P24G_HOST_DEVICES_COUNT; i++) writePin(p24g_led_pin_list[i], !HOST_LED_PIN_ON_STATE);
@@ -496,7 +543,15 @@ void indicator_set(wt_state_t state, uint8_t host_index) {
 #endif
 #ifdef COMMON_P24G_LED_PIN
             writePin(COMMON_P24G_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
+            for (uint8_t i = 0; i < P24G_HOST_DEVICES_COUNT; i++) writePin(p24g_led_pin_list[i], !HOST_LED_PIN_ON_STATE);
 #endif
+#ifdef COMMON_BT_LED_PIN
+            writePin(COMMON_BT_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
+#endif
+#ifdef COMMON_P24G_LED_PIN
+            writePin(COMMON_P24G_LED_PIN, !COMMON_BT_LED_PIN_ON_STATE);
+#endif
+
 
             break;
 
@@ -684,6 +739,7 @@ bool LED_INDICATORS_KB(void) {
         }
 
         if (battery_is_empty()) SET_ALL_LED_OFF();
+#    if defined(LOW_BAT_IND_INDEX)
 #    if defined(LOW_BAT_IND_INDEX)
         if (bat_low_ind_state && (bat_low_ind_state & 0x0F) <= LOW_BAT_LED_BLINK_TIMES) {
             uint8_t idx_list[] = LOW_BAT_IND_INDEX;

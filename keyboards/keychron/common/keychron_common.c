@@ -39,6 +39,12 @@ static uint8_t mac_keycode[4] = {
     KC_LCMD,
     KC_RCMD,
 };
+static uint8_t mac_keycode[4] = {
+    KC_LOPT,
+    KC_ROPT,
+    KC_LCMD,
+    KC_RCMD,
+};
 
 // clang-format off
 static key_combination_t key_comb_list[] = {
@@ -54,35 +60,6 @@ static key_combination_t key_comb_list[] = {
 #endif
 };
 // clang-format on
-
-void keychron_common_init(void) {
-#ifdef SNAP_CLICK_ENABLE
-    extern void snap_click_init(void);
-    snap_click_init();
-#endif
-#if defined(RGB_MATRIX_ENABLE) && defined(KEYCHRON_RGB_ENABLE)
-    extern void eeconfig_init_custom_rgb(void);
-    eeconfig_init_custom_rgb();
-#endif
-#ifdef LK_WIRELESS_ENABLE
-#    ifdef P2P4_MODE_SELECT_PIN
-    palSetLineMode(P2P4_MODE_SELECT_PIN, PAL_MODE_INPUT);
-#    endif
-#    ifdef BT_MODE_SELECT_PIN
-    palSetLineMode(BT_MODE_SELECT_PIN, PAL_MODE_INPUT);
-#    endif
-#    ifdef BAT_LOW_LED_PIN
-    writePin(BAT_LOW_LED_PIN, BAT_LOW_LED_PIN_ON_STATE);
-#    endif
-
-    lkbt51_init(false);
-    wireless_init();
-#endif
-
-#ifdef ENCODER_ENABLE
-    encoder_cb_init();
-#endif
-}
 
 bool process_record_keychron_common(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -126,6 +103,12 @@ bool process_record_keychron_common(uint16_t keycode, keyrecord_t *record) {
         case KC_FILE:
         case KC_SNAP:
         case KC_CTANA:
+#ifdef WIN_LOCK_SCREEN_ENABLE
+        case KC_WLCK:
+#endif
+#ifdef MAC_LOCK_SCREEN_ENABLE
+        case KC_MLCK:
+#endif
 #ifdef WIN_LOCK_SCREEN_ENABLE
         case KC_WLCK:
 #endif

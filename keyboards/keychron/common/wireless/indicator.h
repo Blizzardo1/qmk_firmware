@@ -80,6 +80,10 @@
 #    pragma error("HOST_COUNT max value is 6")
 #endif
 
+#ifndef P24G_HOST_DEVICES_COUNT
+#    define P24G_HOST_DEVICES_COUNT 1
+#endif
+
 typedef enum {
     INDICATOR_NONE,
     INDICATOR_OFF,
