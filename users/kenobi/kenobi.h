@@ -31,10 +31,10 @@
 
 os_variant_t dos;
 
-void process_record_win32(uint16_t keycode, keyrecord_t *record);
-void process_record_gnu(uint16_t keycode, keyrecord_t *record);
-void process_record_macos(uint16_t keycode, keyrecord_t *record);
-void process_record_ios(uint16_t keycode, keyrecord_t *record);
+bool process_record_win32(uint16_t keycode, keyrecord_t *record);
+bool process_record_gnu(uint16_t keycode, keyrecord_t *record);
+bool process_record_macos(uint16_t keycode, keyrecord_t *record);
+bool process_record_ios(uint16_t keycode, keyrecord_t *record);
 
 
 enum KENOBI_COMMANDS {
