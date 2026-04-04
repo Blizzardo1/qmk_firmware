@@ -42,6 +42,6 @@
         { 99 }
 
 #    define RGB_MATRIX_KEYPRESSES
-#    define RGB_MATRIX_FRAMEBUFFER_EFFECTSs
+#    define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 
 #endif
