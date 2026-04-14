@@ -14,7 +14,7 @@ def get_raw_hid_interface():
     print(device_interfaces)
     raw_hid_interfaces = [i for i in device_interfaces if i['usage_page'] == usage_page and i['usage'] == usage]
 
-    if len(raw_hid_interfaces) == 0:
+    if not raw_hid_interfaces:
         return None
 
     interface = hid.Device(path=raw_hid_interfaces[0]['path'])

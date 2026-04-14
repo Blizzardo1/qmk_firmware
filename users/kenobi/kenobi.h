@@ -12,8 +12,6 @@
 // #include "quantum/audio/song_list.h"
 
 // Secure Lock
-#define SECURE_UNLOCK_TIMEOUT 5000
-#define SECURE_IDLE_TIMEOUT 0
 #define SECURE_UNLOCK_SEQUENCE { {0, 0} } // {{213,52}, {213,39}, {213,52}, {203,52}}
 
 // RAW HID

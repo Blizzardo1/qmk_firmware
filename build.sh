@@ -14,7 +14,7 @@ _arg_model="k10_pro"
 _arg_layout="ansi"
 _arg_led="rgb"
 _arg_keymap="kenobi"
-_arg_parallel=8
+_arg_parallel=24
 _arg_generate_compilation_database="off"
 
 compile()
@@ -208,7 +208,8 @@ parse_commandline "$@"
 
 if [[ $_arg_generate_compilation_database == "on" ]]; then
     echo "Generating Compilation Database"
-    qmk generate-compilation-database --keyboard "${_arg_keyboard}/${_arg_model}/${_arg_layout}/${_arg_led}" --keymap "${_arg_keymap}"
+    # qmk generate-compilation-database --keyboard "${_arg_keyboard}/${_arg_model}/${_arg_layout}/${_arg_led}" --keymap "${_arg_keymap}"
+    qmk compile --compiledb --keyboard "${_arg_keyboard}/${_arg_model}/${_arg_layout}/${_arg_led}" --keymap "${_arg_keymap}"
 fi
 
 if [[ $_arg_compile == "on" && $_arg_flash == "off" ]]; then

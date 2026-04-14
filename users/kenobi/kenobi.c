@@ -1,4 +1,5 @@
 #include "kenobi.h"
+#include "rgb_matrix.h"
 
 void keyboard_post_init_user(void) {
 #ifdef AUDIO_ENABLE
@@ -11,7 +12,6 @@ void keyboard_post_init_user(void) {
 
 bool process_detected_host_os_user(os_variant_t detected_os) {
     dos = detected_os;
-
     return true;
 }
 
@@ -27,6 +27,20 @@ bool process_record_win32(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_gnu(uint16_t keycode, keyrecord_t *record) {
+    if(record->event.pressed && (keycode == LGUI(KC_L))) {
+        // Linux+L was pressed
+        // Add your code here
+        rgb_matrix_mode(RGB_MATRIX_PIXEL_RAIN);
+    }
+    if(record->event.pressed && (keycode == LGUI(KC_R))) {
+        // Linux+R was pressed
+        // Add your code here
+        rgb_matrix_mode(rgb_matrix_get_mode());
+
+        // #FF8040
+        rgb_matrix_set_color_all(255, 128, 64);
+
+    }
     return true;
 }
 
@@ -50,6 +64,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             process_record_ios(keycode, record);
             break;
         case OS_UNSURE:
+            process_record_gnu(keycode, record);
             break;
     }
     return true;
