@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "eeconfig_language.h"
+#include "language/eeconfig_language.h"
 
 #define EECONFIG_BASE_LANGUAGE 37
 #define EECONFIG_END_LANGUAGE (EECONFIG_BASE_LANGUAGE + EECONFIG_SIZE_LANGUAGE)
