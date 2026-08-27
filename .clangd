@@ -2,5 +2,11 @@ CompileFlags:
   Add: [-Wno-unknown-attributes, -Wno-maybe-uninitialized, -Wno-unknown-warning-option]
   Remove: [-W*, -mcall-prologues]
   Compiler: arm-none-eabi-gcc
+  CompilationDatabase: .
 Diagnostics:
   UnusedIncludes: None
+---
+If:
+  PathMatch: .*\.inc$
+CompileFlags:
+  Add: [-xc]

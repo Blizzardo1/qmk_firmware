@@ -1,5 +1,5 @@
 #!/bin/bash
-# Generated online by https://argbash.io/generate
+# Generated online by https://argbash.dev/generate
 
 if [[ ! $MSYSTEM ]]; then
     export MSYSTEM=MINGW64

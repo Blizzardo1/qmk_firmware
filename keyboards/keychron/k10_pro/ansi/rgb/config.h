@@ -41,6 +41,10 @@
 #        define VIA_QMK_RGBLIGHT_ENABLE
 #    endif
 
+#ifndef RGBLIGHT_LAYER_BLINK
+    #define RGBLIGHT_LAYER_BLINK
+#endif
+
 /* RGB Matrix Animation modes. Explicitly enabled
  * For full list of effects, see:
  * https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects

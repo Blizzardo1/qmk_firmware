@@ -47,8 +47,9 @@ static bool kenobi_effect_run(effect_params_t* params) {
     for (int i = 0; i < sizeof(kenobi_keymap) / (ENTRY_SIZE * sizeof(int)); i++) {
         int d = kenobi_keymap[i][0];
         int om = kenobi_keymap[i][1];
-        for(int o = 0; o < om; o++) {
+        for(size_t o = 0; o < om; o++) {
             int a = d + o;
+            if (a >= led_max) continue;
             rgb_matrix_set_color(a, kenobi_keymap[i][2], kenobi_keymap[i][3], kenobi_keymap[i][4]);
         }
     }
@@ -59,6 +60,7 @@ static bool kenobi_effect_run(effect_params_t* params) {
     // }
   return rgb_matrix_check_finished_leds(led_max);
 }
+
 static bool KENOBI_EFFECT(effect_params_t* params) {
   if (params->init) kenobi_effect_init(params);
   return kenobi_effect_run(params);
@@ -66,9 +68,11 @@ static bool KENOBI_EFFECT(effect_params_t* params) {
 
 static bool KENOBI_LOCKED(effect_params_t* params) {
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
+
     for (uint8_t i = led_min; i < led_max; i++) {
         rgb_matrix_set_color(i, 255, 0, 0);
     }
-    return true;
+
+    return rgb_matrix_check_finished_leds(led_max);
 }
 #endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS

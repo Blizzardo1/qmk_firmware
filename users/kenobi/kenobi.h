@@ -20,6 +20,8 @@
 
 // Keychron K10_Pro Vendor ID
 #define VENDOR_ID 0x3434
+#define MATRIX_ROWS 6
+#define MATRIX_COLS 21
 
 
 #define ENABLE_RGB_MATRIX_MULTISPLASH
@@ -27,6 +29,7 @@
 #undef RGB_LIGHT_EFFECT_RAINBOW_SWIRL
 #undef RGB_LIGHT_EFFECT_STATIC_GRADIENT
 
+#ifdef OS_DETECTION_ENABLE
 os_variant_t dos;
 
 bool process_record_win32(uint16_t keycode, keyrecord_t *record);
@@ -34,29 +37,36 @@ bool process_record_gnu(uint16_t keycode, keyrecord_t *record);
 bool process_record_macos(uint16_t keycode, keyrecord_t *record);
 bool process_record_ios(uint16_t keycode, keyrecord_t *record);
 
+#endif
 
 enum KENOBI_COMMANDS {
     KENOBI_GET_BATTERY_CMD = 0xC0,
     KENOBI_GET_LAYOUT_CMD = 0xC1,
     KENOBI_GET_LOCK_STATUS_CMD = 0xC2,
+    KENOBI_GET_WPM = 0xC3
 };
 
 // Move these someplace else
-uint8_t max(uint8_t a, uint8_t b) {
+static inline uint8_t max(uint8_t a, uint8_t b) {
     return a > b ? a : b;
 }
 
-uint8_t min(uint8_t a, uint8_t b) {
+static inline uint8_t min(uint8_t a, uint8_t b) {
     return a < b ? a : b;
 }
 
 /*
-    \brief Get the middle value of a number between 0 and 255
-    \param a The number to get the middle value of
-    \remarks Basically clamp8 but with a different name, I'm not sure why I did this. I'm stupid.
+    \brief Clamp a value into the 8-bit range.
+    \param a The number to clamp.
 */
-uint8_t mid(uint8_t a) {
-    return a < 0 ? 0 : a > 255 ? 255 : a;
+static inline uint8_t mid(int16_t a) {
+    if (a < 0) {
+        return 0;
+    }
+    if (a > 255) {
+        return 255;
+    }
+    return (uint8_t)a;
 }
 
 #endif

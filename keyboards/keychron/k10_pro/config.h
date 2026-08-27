@@ -90,6 +90,11 @@
 #define WEAR_LEVELING_BACKING_SIZE (WEAR_LEVELING_LOGICAL_SIZE * 2)
 #define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 2047
 
+// Debounce time (ms)
+#define DEBOUNCE 50
+#define DEBOUNCE_TYPE "sym_defer_g"
+
+
 /* HC595 driver configuration */
 #define HC595_STCP A0
 #define HC595_SHCP A1
