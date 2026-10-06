@@ -91,7 +91,7 @@
 #define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 2047
 
 // Debounce time (ms)
-#define DEBOUNCE 50
+#define DEBOUNCE 150
 #define DEBOUNCE_TYPE "sym_defer_g"
 
 

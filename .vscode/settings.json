@@ -20,4 +20,5 @@
     "cmake.ignoreCMakeListsMissing": true,
     "makefile.configureOnOpen": false,
     "cSpell.enabled": false,
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json",
 }
